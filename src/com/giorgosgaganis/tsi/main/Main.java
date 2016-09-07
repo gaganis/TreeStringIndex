@@ -24,41 +24,56 @@ import com.giorgosgaganis.tsi.populator.TreeNodePopulator;
 import com.giorgosgaganis.tsi.populator.WordPreProcessor;
 import com.giorgosgaganis.tsi.search.TreeSearcher;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
+
+    public static final int SEARCH_COUNT = 30;
+
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
+
+    private static int counter = 0;
+    private static long totalTime = 0;
+
+    public static void main(String[] args) throws IOException {
+
+        LogManager.getLogManager().getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.FINE);
 
         final String dictionaryFilePath = "el.wl.utf8";
         Node root = TreeNodePopulator.createTreeFromFilePath(dictionaryFilePath);
 
         TreeSearcher searcher = new TreeSearcher(root);
 
-        Scanner s = new Scanner(new File("dictionary_sorted_by_wordlength"));
-        while (s.hasNext()) {
+        Scanner s = new Scanner(new BufferedReader(new FileReader("shuffled_words")));
+        while (s.hasNext() && counter <= SEARCH_COUNT) {
             WordPreProcessor preProcessor = new WordPreProcessor();
 
             String word = preProcessor.process(s.next());
             searchWordShuffled(searcher, word);
+            counter++;
         }
         s.close();
+        logger.info("counter = " + counter);
+        logger.info("totalTime = " + totalTime);
+        logger.info("totalTime / counter = " + totalTime / counter);
     }
 
-    private static void searchWordShuffled(TreeSearcher searcher, String word) {
-        System.out.println("word = " + word);
-
-        final String suffledWord = Utils.shuffle(word);
-        System.out.println("suffledWord = " + suffledWord);
+    private static void searchWordShuffled(TreeSearcher searcher, String suffledWord) {
 
         long start = System.currentTimeMillis();
         List<String> searchResults = searcher.searchPermutatedWord(suffledWord);
         final long time = System.currentTimeMillis() - start;
 
-        System.out.println("searchResult.getResults() = " + searchResults);
-        System.out.println("search time = " + time);
+//        System.out.println("searchResult.getResults() = " + searchResults);
+//        System.out.println("search time = " + time);
+
+        counter++;
+        totalTime += time;
     }
 
 }

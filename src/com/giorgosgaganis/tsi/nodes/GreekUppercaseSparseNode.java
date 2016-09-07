@@ -22,18 +22,36 @@ package com.giorgosgaganis.tsi.nodes;
 import java.util.HashMap;
 import java.util.Map;
 
-class HashMapNode extends AbstractNode {
+class GreekUppercaseSparseNode extends AbstractNode {
+    public static final int ARRAY_SIZE = 24;
 
-    private final Map<Character, Node> nodeMap = new HashMap<>();
+    private Node[] sparseArray = new Node[ARRAY_SIZE];
+
+    private Map<Character, Node> overflowMap = null;
 
     @Override
     public Node getNextNode(Character nextNodeChar) {
-        return nodeMap.get(nextNodeChar);
+        int position = nextNodeChar - 0x0391;
+        if(position >= 0 && position < ARRAY_SIZE) {
+            return  sparseArray[position];
+        } else {
+            if(overflowMap == null) {
+                return null;
+            }
+            return overflowMap.get(nextNodeChar);
+        }
     }
 
     @Override
     public void putNextNode(Character nextNodeChar, Node refNode) {
-
-        nodeMap.put(nextNodeChar, refNode);
+        int position = nextNodeChar - 0x0391;
+        if(position >= 0 && position < ARRAY_SIZE) {
+            sparseArray[position] = refNode;
+        } else {
+            if(overflowMap == null) {
+                overflowMap = new HashMap<>();
+            }
+            overflowMap.put(nextNodeChar, refNode);
+        }
     }
 }

@@ -29,5 +29,6 @@ public class NodeFactory {
     public Node createNode() {
         nodeCount++;
         return new HashMapNode();
+//        return new GreekUppercaseSparseNode();
     }
 }

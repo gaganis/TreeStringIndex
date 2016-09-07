@@ -24,18 +24,10 @@ import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class HashMapNodeTest {
+public class HashMapNodeTest extends AbstractNodeTest {
 
-    @Test
-    public void testNodeCheck() {
-
-        Node refNode = Mockito.mock(Node.class);
-
-        Node node = new HashMapNode();
-
-        node.putNextNode('a', refNode);
-        Node resultRefNode = node.getNextNode('a');
-
-        assertThat(resultRefNode).isSameAs(refNode);
+    @Override
+    protected Node getNode() {
+        return new HashMapNode();
     }
 }

@@ -22,12 +22,14 @@ package com.giorgosgaganis.tsi.populator;
 import com.giorgosgaganis.tsi.nodes.Node;
 import com.giorgosgaganis.tsi.nodes.NodeFactory;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class TreeNodePopulator {
+    private static final Logger logger = Logger.getLogger(TreeNodePopulator.class.getName());
+
     private final Node root;
     private final NodeFactory nodeFactory;
 
@@ -74,22 +76,29 @@ public class TreeNodePopulator {
         }
     }
 
-    public static Node createTreeFromFilePath(String dictionaryFilePath) throws FileNotFoundException {
+    public static Node createTreeFromFilePath(String dictionaryFilePath) throws IOException {
         NodeFactory nodeFactory = new NodeFactory();
         Node root = nodeFactory.createNode();
         TreeNodePopulator populator = new TreeNodePopulator(root, nodeFactory);
 
         long start = System.currentTimeMillis();
 
-        Scanner s = new Scanner(new File(dictionaryFilePath));
+        Scanner s = new Scanner(
+                new InputStreamReader(
+                        new BufferedInputStream(
+                                new FileInputStream(dictionaryFilePath))));
         while (s.hasNext()) {
-            WordPreProcessor preProcessor = new WordPreProcessor();
 
-            populator.addWord(preProcessor.process(s.next()));
+
+            String word = s.next();
+            logger.fine("word = " + word);
+
+            WordPreProcessor preProcessor = new WordPreProcessor();
+            populator.addWord(preProcessor.process(word));
         }
         s.close();
-        System.out.println("nodeFactory.getNodeCount() = " + NodeFactory.getNodeCount());
-        System.out.println("population time = " + (System.currentTimeMillis() - start));
+        logger.info("nodeFactory.getNodeCount() = " + NodeFactory.getNodeCount());
+        logger.info("population time = " + (System.currentTimeMillis() - start));
         return root;
     }
 }
