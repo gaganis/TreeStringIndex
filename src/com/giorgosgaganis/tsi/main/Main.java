@@ -23,11 +23,6 @@ import com.giorgosgaganis.tsi.nodes.Node;
 import com.giorgosgaganis.tsi.populator.TreeNodePopulator;
 import com.giorgosgaganis.tsi.populator.WordPreProcessor;
 import com.giorgosgaganis.tsi.search.TreeSearcher;
-import joptsimple.ArgumentAcceptingOptionSpec;
-import joptsimple.OptionParser;
-import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
-import sun.rmi.runtime.Log;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -36,12 +31,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 import java.util.logging.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 class Main {
-
-    private static final int SEARCH_COUNT = 30;
 
     private static Logger logger = Logger.getLogger(Main.class.getName());
 
@@ -54,28 +45,12 @@ class Main {
 
         logger.info("Starting");
 
-        int totalCount = SEARCH_COUNT;
-        String nodeType = "";
-        OptionParser parser = new OptionParser();
-        OptionSpec<Integer> countSpec =
-                parser.accepts( "searchCount" ).withRequiredArg().ofType( Integer.class );
-        ArgumentAcceptingOptionSpec<String> nodeFactorySpec = parser.accepts("nodeFactory").withRequiredArg().ofType(String.class);
+        CommandLineParameters clp = CommandLineParameters.getCommandLineParameters(args);
 
-        parser.accepts( "searchCount" ).withRequiredArg();
-
-        OptionSet options = parser.parse( args );
-        Integer countParameter = options.valueOf(countSpec);
-        if(countParameter != null) {
-            totalCount = countParameter;
-        }
-        String nodeTypeParameter = options.valueOf(nodeFactorySpec);
-        if(nodeTypeParameter != null) {
-            nodeType = nodeTypeParameter;
-        }
 
         final String dictionaryFilePath = "el.wl.utf8";
         logger.info("Starting tree population");
-        Node root = TreeNodePopulator.createTreeFromFilePath(dictionaryFilePath, nodeType);
+        Node root = TreeNodePopulator.createTreeFromFilePath(dictionaryFilePath, clp.getNodeType());
         logger.info("Finished tree population");
 
         TreeSearcher searcher = new TreeSearcher(root);
@@ -85,7 +60,7 @@ class Main {
                         new BufferedInputStream(
                                 new FileInputStream("shuffled_words")),
                         "utf-8"));
-        while (s.hasNext() && counter < totalCount) {
+        while (s.hasNext() && counter < clp.getNumberOfSearches()) {
             WordPreProcessor preProcessor = new WordPreProcessor();
 
             String word = preProcessor.process(s.next());
