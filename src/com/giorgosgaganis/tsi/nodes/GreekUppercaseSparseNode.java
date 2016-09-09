@@ -23,9 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 class GreekUppercaseSparseNode extends AbstractNode {
-    public static final int ARRAY_SIZE = 24;
+    private static final int ARRAY_SIZE = 24;
 
-    private Node[] sparseArray = new Node[ARRAY_SIZE];
+    private final Node[] sparseArray = new Node[ARRAY_SIZE];
 
     private Map<Character, Node> overflowMap = null;
 

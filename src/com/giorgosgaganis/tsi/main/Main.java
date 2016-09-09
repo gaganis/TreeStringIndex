@@ -31,9 +31,9 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-public class Main {
+class Main {
 
-    public static final int SEARCH_COUNT = 30;
+    private static final int SEARCH_COUNT = 30;
 
     private static final Logger logger = Logger.getLogger(Main.class.getName());
 
@@ -44,18 +44,31 @@ public class Main {
 
         LogManager.getLogManager().getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.FINE);
 
+        String nodeType = null;
+        if( args.length > 0 ) {
+            nodeType = args[0];
+        }
+
+        int totalCount = SEARCH_COUNT;
+        if( args.length > 1 ) {
+            totalCount = new Integer(args[1]);
+        }
+
         final String dictionaryFilePath = "el.wl.utf8";
-        Node root = TreeNodePopulator.createTreeFromFilePath(dictionaryFilePath);
+        Node root = TreeNodePopulator.createTreeFromFilePath(dictionaryFilePath, nodeType);
 
         TreeSearcher searcher = new TreeSearcher(root);
 
-        Scanner s = new Scanner(new BufferedReader(new FileReader("shuffled_words")));
-        while (s.hasNext() && counter <= SEARCH_COUNT) {
+        Scanner s = new Scanner(
+                new InputStreamReader(
+                        new BufferedInputStream(
+                                new FileInputStream("shuffled_words")),
+                        "utf-8"));
+        while (s.hasNext() && counter < totalCount) {
             WordPreProcessor preProcessor = new WordPreProcessor();
 
             String word = preProcessor.process(s.next());
             searchWordShuffled(searcher, word);
-            counter++;
         }
         s.close();
         logger.info("counter = " + counter);
@@ -69,8 +82,8 @@ public class Main {
         List<String> searchResults = searcher.searchPermutatedWord(suffledWord);
         final long time = System.currentTimeMillis() - start;
 
-//        System.out.println("searchResult.getResults() = " + searchResults);
-//        System.out.println("search time = " + time);
+        System.out.println("searchResult.getResults() = " + searchResults);
+        System.out.println("search time = " + time);
 
         counter++;
         totalTime += time;

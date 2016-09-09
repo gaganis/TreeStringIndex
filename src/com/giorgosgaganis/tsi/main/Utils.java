@@ -25,17 +25,4 @@ class Utils {
 
     private static final Random rand = new Random(0);
 
-    static String shuffle(String text) {
-        char[] characters = text.toCharArray();
-        for (int j = 0; j < 20; j++) {
-
-            for (int i = 0; i < characters.length; i++) {
-                int randomIndex = (int) (rand.nextDouble() * characters.length);
-                char temp = characters[i];
-                characters[i] = characters[randomIndex];
-                characters[randomIndex] = temp;
-            }
-        }
-        return new String(characters);
-    }
 }

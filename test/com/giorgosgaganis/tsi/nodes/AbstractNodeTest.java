@@ -5,9 +5,6 @@ import org.mockito.Mockito;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- * Created by gaganis on 7/9/2016.
- */
 public abstract class AbstractNodeTest {
     @Test
     public void testNodeCheck() {
@@ -35,7 +32,7 @@ public abstract class AbstractNodeTest {
         testForCharacter('Ω');
     }
 
-    protected void testForCharacter(char testedCharacter) {
+    private void testForCharacter(char testedCharacter) {
         Node refNode = Mockito.mock(Node.class);
 
         Node node = getNode();

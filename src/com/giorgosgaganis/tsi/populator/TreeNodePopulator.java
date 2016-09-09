@@ -25,6 +25,7 @@ import com.giorgosgaganis.tsi.nodes.NodeFactory;
 import java.io.*;
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TreeNodePopulator {
@@ -76,22 +77,24 @@ public class TreeNodePopulator {
         }
     }
 
-    public static Node createTreeFromFilePath(String dictionaryFilePath) throws IOException {
-        NodeFactory nodeFactory = new NodeFactory();
+    public static Node createTreeFromFilePath(String dictionaryFilePath, String nodeType) throws IOException {
+        NodeFactory nodeFactory = new NodeFactory(nodeType);
         Node root = nodeFactory.createNode();
         TreeNodePopulator populator = new TreeNodePopulator(root, nodeFactory);
 
         long start = System.currentTimeMillis();
 
+        logger.setLevel(Level.FINE);
         Scanner s = new Scanner(
                 new InputStreamReader(
                         new BufferedInputStream(
-                                new FileInputStream(dictionaryFilePath))));
+                                new FileInputStream(dictionaryFilePath)),
+                        "utf-8"));
         while (s.hasNext()) {
 
 
             String word = s.next();
-            logger.fine("word = " + word);
+//            System.out.println("word = " + word);
 
             WordPreProcessor preProcessor = new WordPreProcessor();
             populator.addWord(preProcessor.process(word));

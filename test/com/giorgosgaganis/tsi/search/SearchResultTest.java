@@ -22,7 +22,7 @@ package com.giorgosgaganis.tsi.search;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchResultTest {
+class SearchResultTest {
     private boolean found;
     private final List<String> results = new ArrayList<>();
 

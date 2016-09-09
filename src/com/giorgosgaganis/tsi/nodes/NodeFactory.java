@@ -21,6 +21,11 @@ package com.giorgosgaganis.tsi.nodes;
 
 public class NodeFactory {
     private static long nodeCount = 0;
+    private final String nodeType;
+
+    public NodeFactory(String nodeType) {
+        this.nodeType = nodeType;
+    }
 
     public static long getNodeCount() {
         return nodeCount;
@@ -28,7 +33,10 @@ public class NodeFactory {
 
     public Node createNode() {
         nodeCount++;
-        return new HashMapNode();
-//        return new GreekUppercaseSparseNode();
+        if("hash".equals(nodeType) ) {
+            return new HashMapNode();
+        } else {
+            return new GreekUppercaseSparseNode();
+        }
     }
 }
