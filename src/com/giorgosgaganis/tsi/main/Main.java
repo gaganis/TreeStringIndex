@@ -23,39 +23,60 @@ import com.giorgosgaganis.tsi.nodes.Node;
 import com.giorgosgaganis.tsi.populator.TreeNodePopulator;
 import com.giorgosgaganis.tsi.populator.WordPreProcessor;
 import com.giorgosgaganis.tsi.search.TreeSearcher;
+import joptsimple.ArgumentAcceptingOptionSpec;
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
+import sun.rmi.runtime.Log;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import java.util.logging.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class Main {
 
     private static final int SEARCH_COUNT = 30;
 
-    private static final Logger logger = Logger.getLogger(Main.class.getName());
+    private static Logger logger = Logger.getLogger(Main.class.getName());
 
     private static int counter = 0;
     private static long totalTime = 0;
 
     public static void main(String[] args) throws IOException {
 
-        LogManager.getLogManager().getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.FINE);
+        configureLogging();
 
-        String nodeType = null;
-        if( args.length > 0 ) {
-            nodeType = args[0];
-        }
+        logger.info("Starting");
 
         int totalCount = SEARCH_COUNT;
-        if( args.length > 1 ) {
-            totalCount = new Integer(args[1]);
+        String nodeType = "";
+        OptionParser parser = new OptionParser();
+        OptionSpec<Integer> countSpec =
+                parser.accepts( "searchCount" ).withRequiredArg().ofType( Integer.class );
+        ArgumentAcceptingOptionSpec<String> nodeFactorySpec = parser.accepts("nodeFactory").withRequiredArg().ofType(String.class);
+
+        parser.accepts( "searchCount" ).withRequiredArg();
+
+        OptionSet options = parser.parse( args );
+        Integer countParameter = options.valueOf(countSpec);
+        if(countParameter != null) {
+            totalCount = countParameter;
+        }
+        String nodeTypeParameter = options.valueOf(nodeFactorySpec);
+        if(nodeTypeParameter != null) {
+            nodeType = nodeTypeParameter;
         }
 
         final String dictionaryFilePath = "el.wl.utf8";
+        logger.info("Starting tree population");
         Node root = TreeNodePopulator.createTreeFromFilePath(dictionaryFilePath, nodeType);
+        logger.info("Finished tree population");
 
         TreeSearcher searcher = new TreeSearcher(root);
 
@@ -71,13 +92,21 @@ class Main {
             searchWordShuffled(searcher, word);
         }
         s.close();
-        logger.info("counter = " + counter);
-        logger.info("totalTime = " + totalTime);
-        logger.info("totalTime / counter = " + totalTime / counter);
+        Main.logger.info("counter = " + counter);
+        Main.logger.info("totalTime = " + totalTime);
+        Main.logger.info("totalTime / counter = " + totalTime / counter);
+    }
+
+    private static void configureLogging() throws IOException {
+        Path logConfig = Paths.get("logging.properties");
+        if(Files.exists(logConfig)) {
+            LogManager.getLogManager().readConfiguration(Files.newInputStream(logConfig));
+        }
     }
 
     private static void searchWordShuffled(TreeSearcher searcher, String suffledWord) {
 
+        logger.fine("Searching suffledWord = " + suffledWord);
         long start = System.currentTimeMillis();
         List<String> searchResults = searcher.searchPermutatedWord(suffledWord);
         final long time = System.currentTimeMillis() - start;
