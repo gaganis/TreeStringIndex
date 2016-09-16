@@ -21,20 +21,24 @@ package com.giorgosgaganis.tsi.main;
 
 import com.giorgosgaganis.tsi.nodes.Node;
 import com.giorgosgaganis.tsi.populator.TreeNodePopulator;
-import com.giorgosgaganis.tsi.populator.WordPreProcessor;
 import com.giorgosgaganis.tsi.search.TreeSearcher;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 class Main {
 
-    private static Logger logger = Logger.getLogger(Main.class.getName());
+    private static final Logger logger = Logger.getLogger(Main.class.getName());
 
     private static int counter = 0;
     private static long totalTime = 0;
@@ -48,7 +52,7 @@ class Main {
         CommandLineParameters clp = CommandLineParameters.getCommandLineParameters(args);
 
 
-        final String dictionaryFilePath = "el.wl.utf8";
+        final String dictionaryFilePath = "capitalized_words";
         logger.info("Starting tree population");
         Node root = TreeNodePopulator.createTreeFromFilePath(dictionaryFilePath, clp.getNodeType());
         logger.info("Finished tree population");
@@ -58,13 +62,10 @@ class Main {
         Scanner s = new Scanner(
                 new InputStreamReader(
                         new BufferedInputStream(
-                                new FileInputStream("shuffled_words")),
+                                new FileInputStream("capitalized_shuffled_words")),
                         "utf-8"));
         while (s.hasNext() && counter < clp.getNumberOfSearches()) {
-            WordPreProcessor preProcessor = new WordPreProcessor();
-
-            String word = preProcessor.process(s.next());
-            searchWordShuffled(searcher, word);
+            searchWordShuffled(searcher, s.next());
         }
         s.close();
         Main.logger.info("counter = " + counter);
@@ -74,20 +75,24 @@ class Main {
 
     private static void configureLogging() throws IOException {
         Path logConfig = Paths.get("logging.properties");
-        if(Files.exists(logConfig)) {
+        if (Files.exists(logConfig)) {
             LogManager.getLogManager().readConfiguration(Files.newInputStream(logConfig));
         }
     }
 
     private static void searchWordShuffled(TreeSearcher searcher, String suffledWord) {
 
-        logger.fine("Searching suffledWord = " + suffledWord);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("Searching suffledWord = " + suffledWord);
+        }
         long start = System.currentTimeMillis();
         List<String> searchResults = searcher.searchPermutatedWord(suffledWord);
         final long time = System.currentTimeMillis() - start;
 
-        System.out.println("searchResult.getResults() = " + searchResults);
-        System.out.println("search time = " + time);
+        if (logger.isLoggable(Level.FINE)) {
+            logger.fine("searchResult.getResults() = " + searchResults);
+            logger.fine("search time = " + time);
+        }
 
         counter++;
         totalTime += time;

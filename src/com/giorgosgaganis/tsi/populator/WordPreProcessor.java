@@ -43,6 +43,13 @@ public class WordPreProcessor {
         punctuatedCharactersMap.put('Ό', 'Ο');
         punctuatedCharactersMap.put('Ύ', 'Υ');
         punctuatedCharactersMap.put('Ώ', 'Ω');
+
+        punctuatedCharactersMap.put('Ϊ', 'Ι');
+        punctuatedCharactersMap.put('ϊ', 'Ι');
+        punctuatedCharactersMap.put('ΐ', 'Ι');
+        punctuatedCharactersMap.put('Ϋ', 'Υ');
+        punctuatedCharactersMap.put('ϋ', 'Υ');
+        punctuatedCharactersMap.put('ΰ', 'Υ');
     }
 
     public String process(String next) {

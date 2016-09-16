@@ -22,7 +22,10 @@ package com.giorgosgaganis.tsi.populator;
 import com.giorgosgaganis.tsi.nodes.Node;
 import com.giorgosgaganis.tsi.nodes.NodeFactory;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -91,13 +94,7 @@ public class TreeNodePopulator {
                                 new FileInputStream(dictionaryFilePath)),
                         "utf-8"));
         while (s.hasNext()) {
-
-
-            String word = s.next();
-//            System.out.println("word = " + word);
-
-            WordPreProcessor preProcessor = new WordPreProcessor();
-            populator.addWord(preProcessor.process(word));
+            populator.addWord(s.next());
         }
         s.close();
         logger.info("nodeFactory.getNodeCount() = " + NodeFactory.getNodeCount());

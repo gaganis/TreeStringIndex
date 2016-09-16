@@ -19,10 +19,21 @@
  */
 package com.giorgosgaganis.tsi.nodes;
 
-public class HashMapNodeTest extends AbstractNodeTest {
+import java.util.HashMap;
+import java.util.Map;
+
+class BigHashMapNode extends AbstractNode {
+
+    private final Map<Character, Node> nodeMap = new HashMap<>(30);
 
     @Override
-    protected Node getNode() {
-        return new HashMapNode();
+    public Node getNextNode(Character nextNodeChar) {
+        return nodeMap.get(nextNodeChar);
+    }
+
+    @Override
+    public void putNextNode(Character nextNodeChar, Node refNode) {
+
+        nodeMap.put(nextNodeChar, refNode);
     }
 }

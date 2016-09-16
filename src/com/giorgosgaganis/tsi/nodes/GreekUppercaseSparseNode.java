@@ -19,39 +19,22 @@
  */
 package com.giorgosgaganis.tsi.nodes;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.logging.Logger;
 
 class GreekUppercaseSparseNode extends AbstractNode {
-    private static final int ARRAY_SIZE = 24;
+    private static final Logger logger = Logger.getLogger(GreekUppercaseSparseNode.class.getName());
+
+    private static final int ARRAY_SIZE = 25;
 
     private final Node[] sparseArray = new Node[ARRAY_SIZE];
 
-    private Map<Character, Node> overflowMap = null;
-
     @Override
     public Node getNextNode(Character nextNodeChar) {
-        int position = nextNodeChar - 0x0391;
-        if(position >= 0 && position < ARRAY_SIZE) {
-            return  sparseArray[position];
-        } else {
-            if(overflowMap == null) {
-                return null;
-            }
-            return overflowMap.get(nextNodeChar);
-        }
+        return sparseArray[nextNodeChar - 0x0391];
     }
 
     @Override
     public void putNextNode(Character nextNodeChar, Node refNode) {
-        int position = nextNodeChar - 0x0391;
-        if(position >= 0 && position < ARRAY_SIZE) {
-            sparseArray[position] = refNode;
-        } else {
-            if(overflowMap == null) {
-                overflowMap = new HashMap<>();
-            }
-            overflowMap.put(nextNodeChar, refNode);
-        }
+        sparseArray[nextNodeChar - 0x0391] = refNode;
     }
 }

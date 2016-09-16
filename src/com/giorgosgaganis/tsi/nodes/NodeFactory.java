@@ -19,11 +19,15 @@
  */
 package com.giorgosgaganis.tsi.nodes;
 
+import java.util.logging.Logger;
+
 public class NodeFactory {
+    private static final Logger logger = Logger.getLogger(NodeFactory.class.getName());
     private static long nodeCount = 0;
     private final String nodeType;
 
     public NodeFactory(String nodeType) {
+        logger.fine("Configuring NodeFactory to nodeType = " + nodeType);
         this.nodeType = nodeType;
     }
 
@@ -33,8 +37,10 @@ public class NodeFactory {
 
     public Node createNode() {
         nodeCount++;
-        if("hash".equals(nodeType) ) {
+        if ("hash".equals(nodeType)) {
             return new HashMapNode();
+        } else if ("bighash".equals(nodeType)) {
+            return new BigHashMapNode();
         } else {
             return new GreekUppercaseSparseNode();
         }

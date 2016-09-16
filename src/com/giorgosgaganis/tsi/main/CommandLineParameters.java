@@ -1,6 +1,5 @@
 package com.giorgosgaganis.tsi.main;
 
-import joptsimple.ArgumentAcceptingOptionSpec;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -13,7 +12,7 @@ class CommandLineParameters {
         return numberOfSearches;
     }
 
-    public void setNumberOfSearches(int numberOfSearches) {
+    private void setNumberOfSearches(int numberOfSearches) {
         this.numberOfSearches = numberOfSearches;
     }
 
@@ -21,7 +20,7 @@ class CommandLineParameters {
         return nodeType;
     }
 
-    public void setNodeType(String nodeType) {
+    private void setNodeType(String nodeType) {
         this.nodeType = nodeType;
     }
 
@@ -30,17 +29,17 @@ class CommandLineParameters {
 
         OptionParser parser = new OptionParser();
         OptionSpec<Integer> countSpec =
-                parser.accepts( "numberOfSearches" ).withRequiredArg().ofType( Integer.class );
+                parser.accepts("numberOfSearches").withRequiredArg().ofType(Integer.class);
         OptionSpec<String> nodeFactorySpec =
                 parser.accepts("nodeType").withRequiredArg().ofType(String.class);
 
-        OptionSet options = parser.parse( args );
+        OptionSet options = parser.parse(args);
         Integer countParameter = options.valueOf(countSpec);
-        if(countParameter != null) {
+        if (countParameter != null) {
             clp.setNumberOfSearches(countParameter);
         }
         String nodeTypeParameter = options.valueOf(nodeFactorySpec);
-        if(nodeTypeParameter != null) {
+        if (nodeTypeParameter != null) {
             clp.setNodeType(nodeTypeParameter);
         }
         return clp;
