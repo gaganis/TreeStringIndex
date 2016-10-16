@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_treestringindex" default="compile.module.treestringindex">
+  <dirname property="module.treestringindex.basedir" file="${ant.file.module_treestringindex}"/>
+  
+  <property name="module.jdk.home.treestringindex" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.treestringindex" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.treestringindex" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.treestringindex" value="-encoding UTF-8 -source 8 -target 8 ${compiler.args}"/>
+  
+  <property name="treestringindex.output.dir" value="${module.treestringindex.basedir}/../out/production/TreeStringIndex"/>
+  <property name="treestringindex.testoutput.dir" value="${module.treestringindex.basedir}/../out/test/TreeStringIndex"/>
+  
+  <path id="treestringindex.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="treestringindex.module.production.classpath">
+    <path refid="${module.jdk.classpath.treestringindex}"/>
+    <path refid="library.com.google.guava:guava:19.01.classpath"/>
+    <path refid="library.org.assertj:assertj-core:3.5.21.classpath"/>
+    <path refid="library.org.mockito:mockito-all:1.10.191.classpath"/>
+  </path>
+  
+  <path id="treestringindex.runtime.production.module.classpath">
+    <pathelement location="${treestringindex.output.dir}"/>
+    <path refid="library.com.google.guava:guava:19.01.classpath"/>
+    <path refid="library.org.assertj:assertj-core:3.5.21.classpath"/>
+    <path refid="library.org.mockito:mockito-all:1.10.191.classpath"/>
+  </path>
+  
+  <path id="treestringindex.module.classpath">
+    <path refid="${module.jdk.classpath.treestringindex}"/>
+    <pathelement location="${treestringindex.output.dir}"/>
+    <path refid="library.com.google.guava:guava:19.01.classpath"/>
+    <path refid="library.org.assertj:assertj-core:3.5.21.classpath"/>
+    <path refid="library.org.mockito:mockito-all:1.10.191.classpath"/>
+  </path>
+  
+  <path id="treestringindex.runtime.module.classpath">
+    <pathelement location="${treestringindex.testoutput.dir}"/>
+    <pathelement location="${treestringindex.output.dir}"/>
+    <path refid="library.com.google.guava:guava:19.01.classpath"/>
+    <path refid="library.org.assertj:assertj-core:3.5.21.classpath"/>
+    <path refid="library.org.mockito:mockito-all:1.10.191.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.treestringindex">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.treestringindex">
+    <patternset refid="excluded.from.module.treestringindex"/>
+  </patternset>
+  
+  <path id="treestringindex.module.sourcepath">
+    <dirset dir="${module.treestringindex.basedir}/../../TreeStringIndex">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  <path id="treestringindex.module.test.sourcepath">
+    <dirset dir="${module.treestringindex.basedir}/../../TreeStringIndex">
+      <include name="test"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.treestringindex" depends="compile.module.treestringindex.production,compile.module.treestringindex.tests" description="Compile module TreeStringIndex"/>
+  
+  <target name="compile.module.treestringindex.production" depends="register.custom.compilers" description="Compile module TreeStringIndex; production classes">
+    <mkdir dir="${treestringindex.output.dir}"/>
+    <javac2 destdir="${treestringindex.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.treestringindex}/javac">
+      <compilerarg line="${compiler.args.treestringindex}"/>
+      <bootclasspath refid="treestringindex.module.bootclasspath"/>
+      <classpath refid="treestringindex.module.production.classpath"/>
+      <src refid="treestringindex.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.treestringindex"/>
+    </javac2>
+    
+    <copy todir="${treestringindex.output.dir}">
+      <fileset dir="${module.treestringindex.basedir}/../src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.treestringindex.tests" depends="register.custom.compilers,compile.module.treestringindex.production" description="compile module TreeStringIndex; test classes" unless="skip.tests">
+    <mkdir dir="${treestringindex.testoutput.dir}"/>
+    <javac2 destdir="${treestringindex.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.treestringindex}/javac">
+      <compilerarg line="${compiler.args.treestringindex}"/>
+      <bootclasspath refid="treestringindex.module.bootclasspath"/>
+      <classpath refid="treestringindex.module.classpath"/>
+      <src refid="treestringindex.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.treestringindex"/>
+    </javac2>
+    
+    <copy todir="${treestringindex.testoutput.dir}">
+      <fileset dir="${module.treestringindex.basedir}/../test">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.treestringindex" description="cleanup module">
+    <delete dir="${treestringindex.output.dir}"/>
+    <delete dir="${treestringindex.testoutput.dir}"/>
+  </target>
+</project>
