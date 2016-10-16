@@ -35,13 +35,13 @@ public abstract class AbstractNodeTest {
     private void testForCharacter(char testedCharacter) {
         Node refNode = Mockito.mock(Node.class);
 
-        Node node = getNode();
+        CharacterToNodeMapper mapper = getMapper();
 
-        node.putNextNode(testedCharacter, refNode);
-        Node resultRefNode = node.getNextNode(testedCharacter);
+        mapper.putNextNode(testedCharacter, refNode);
+        Node resultRefNode = mapper.getNextNode(testedCharacter);
 
         assertThat(resultRefNode).isSameAs(refNode);
     }
 
-    protected abstract Node getNode();
+    protected abstract CharacterToNodeMapper getMapper();
 }

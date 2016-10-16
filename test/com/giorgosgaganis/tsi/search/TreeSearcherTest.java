@@ -35,7 +35,7 @@ public class TreeSearcherTest {
 
     @Before
     public void setUp() {
-        NodeFactory nodeFactory = new NodeFactory(null);
+        NodeFactory nodeFactory = new NodeFactory("hash");
         Node root = nodeFactory.createNode();
         TreeNodePopulator populator = new TreeNodePopulator(root, nodeFactory);
 

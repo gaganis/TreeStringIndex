@@ -19,22 +19,21 @@
  */
 package com.giorgosgaganis.tsi.nodes;
 
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
-class GreekUppercaseSparseNode extends AbstractNode {
-    private static final Logger logger = Logger.getLogger(GreekUppercaseSparseNode.class.getName());
+class BigHashMapMapper implements CharacterToNodeMapper {
 
-    private static final int ARRAY_SIZE = 25;
-
-    private final Node[] sparseArray = new Node[ARRAY_SIZE];
+    private final Map<Character, Node> nodeMap = new HashMap<>(30);
 
     @Override
     public Node getNextNode(Character nextNodeChar) {
-        return sparseArray[nextNodeChar - 0x0391];
+        return nodeMap.get(nextNodeChar);
     }
 
     @Override
     public void putNextNode(Character nextNodeChar, Node refNode) {
-        sparseArray[nextNodeChar - 0x0391] = refNode;
+
+        nodeMap.put(nextNodeChar, refNode);
     }
 }

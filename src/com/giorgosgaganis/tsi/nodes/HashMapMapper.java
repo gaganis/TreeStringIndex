@@ -22,7 +22,7 @@ package com.giorgosgaganis.tsi.nodes;
 import java.util.HashMap;
 import java.util.Map;
 
-class HashMapNode extends AbstractNode {
+class HashMapMapper implements CharacterToNodeMapper {
 
     private final Map<Character, Node> nodeMap = new HashMap<>();
 

@@ -38,11 +38,11 @@ public class NodeFactory {
     public Node createNode() {
         nodeCount++;
         if ("hash".equals(nodeType)) {
-            return new HashMapNode();
+            return new NodeImpl(new HashMapMapper());
         } else if ("bighash".equals(nodeType)) {
-            return new BigHashMapNode();
+            return new NodeImpl(new BigHashMapMapper());
         } else {
-            return new GreekUppercaseSparseNode();
+            return new NodeImpl(new GreekUppercaseSparseMapper());
         }
     }
 }
