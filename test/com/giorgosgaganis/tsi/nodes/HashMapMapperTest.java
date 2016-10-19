@@ -19,10 +19,10 @@
  */
 package com.giorgosgaganis.tsi.nodes;
 
-public class HashMapNodeTest extends AbstractNodeTest {
+public class HashMapMapperTest extends AbstractNodeTest {
 
     @Override
-    protected Node getNode() {
-        return new HashMapNode();
+    protected CharacterToNodeMapper getMapper() {
+        return new HashMapMapper();
     }
 }
